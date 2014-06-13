@@ -1,3 +1,7 @@
+# Authors: Peter Hyatt and Maulik Mistry
+# This code is provided "AS IS".  It just shows one way of using WebRICK 
+# to receive an uploaded file and then to return a file.
+
 require 'webrick'
 
 root = File.expand_path './files/'
