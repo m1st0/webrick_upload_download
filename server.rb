@@ -16,7 +16,7 @@ class Simple < WEBrick::HTTPServlet::AbstractServlet
 <title>
 </title>
 <body>
-<h1>Now Sign EyeTech Software</h1>
+<h1>Upload File with WebRICK</h1>
 	<form method="POST" enctype="multipart/form-data" action="/sign_windows_application.rb">
 		<label>File:<input type="file" name="file" size="100"/></label> <br />
 		<label>Password:<input type="password" name="password"/></label><br />
