@@ -84,7 +84,7 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 <!--
 # Make sure Apache, etc is proxying this only to the internal developer network.
 
-window.location = #{my_url}/files/#{filedata.filename}
+window.location = #{my_url}/#{file_path}
 //-->
 </script>
 </head>
@@ -102,8 +102,8 @@ if __FILE__ == $0
 	puts "Start server"
 	trap 'INT' do server.shutdown end
 	
-	server.mount '/simple', Simple
-	server.mount '/sign_windows_application', SignWinApp
+	server.mount '/sign', Simple
+	server.mount '/sign_web_service', SignWinApp
 
 	server.start
 end
