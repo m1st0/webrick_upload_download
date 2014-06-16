@@ -63,7 +63,7 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 		sign_tool_output = `signtool.exe sign /n "Company Name, Inc" /t http://timestamp.digicert.com "#{file_path}" 2>&1`
 	  else
 	    # "TODO: Unzip the catalog file and properly sign it then zip it back up."
-	    # Since it is a driver, we need to sign the CAT file here, or embed/sign the SYSINF individually.
+	    # Since it is a driver, we need to sign the CAT file here, or embed/sign the SYS/INF individually.
 	    sign_tool_output = `signtool.exe sign /ac "./Certificates/DigiCert High Assurance EV Root CA.crt" /n "Company Name, Inc" /t http://timestamp.digicert.com "#{file_path}" 2>&1`
 	  end
 	  puts sign_tool_output
