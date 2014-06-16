@@ -66,7 +66,6 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 	    # Since it is a driver, we need to sign the CAT file here, or embed/sign the SYS/INF individually.
 	    sign_tool_output = `signtool.exe sign /ac "./Certificates/DigiCert High Assurance EV Root CA.crt" /n "Company Name, Inc" /t http://timestamp.digicert.com "#{file_path}" 2>&1`
 	  end
-	  puts sign_tool_output
 	  sign_tool_output.gsub!("\n","<br />")
 	  was_signed = 'Failed to sign the file.  See the output below.'
 	  if sign_tool_output.include? "Successfully signed"
@@ -89,7 +88,11 @@ window.location = "#{my_url + '/files/' + filedata.filename}"
 </script>
 </head>
 <body>
-Successfully Signed.
+  #{was_signed}  <br />
+  #{was_driver}  <br />
+
+-- signtool output --<br />
+#{sign_tool_output}
 </body>
 </html>"
   end
