@@ -74,6 +74,7 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 	  was_driver = ''
 	  was_driver = 'It is a driver!' unless is_driver.nil?
 	
+    my_url = '[Your company url, reverse proxy which also blocks external requests.]'
     response.status = 200
     response['Content-Type'] = 'text/html'
     response.body = 
@@ -82,17 +83,16 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 <script type=\"text/javascript\">
 <!--
 # Make sure Apache, etc is proxying this only to the internal developer network.
-my_url = '[Your company url, proxy which also blocks external requests.]'
-window.location = "#{my_url + '/files/' + filedata.filename}"
+
+window.location = #{my_url}/files/#{filedata.filename}
 //-->
 </script>
 </head>
 <body>
   #{was_signed}  <br />
   #{was_driver}  <br />
-
 -- signtool output --<br />
-#{sign_tool_output}
+  #{sign_tool_output}
 </body>
 </html>"
   end
