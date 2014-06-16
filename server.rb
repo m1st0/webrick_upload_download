@@ -1,6 +1,6 @@
 # Authors: Peter Hyatt and Maulik Mistry
 # This code is provided "AS IS".  It just shows one way of using WebRICK 
-# to receive an uploaded file and then to return a file.
+# to receive an uploaded file, sign it, and then return that file.
 
 require 'webrick'
 
@@ -46,7 +46,34 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
       f.write filedata
       f.close
 
+      # Implement the ability to upload a driver ZIP with INF and CAT files.
+      #is_driver
+
+
       puts "Saved file OK"
+      
+      if is_driver.nil?
+      	file_path = './files/' + filedata.filename
+      else
+      	# TODO: It's a driver so lets take care of the zipped driver package accordingly.
+      end
+      
+      sign_tool_output = ''
+	  if is_driver.nil?
+		sign_tool_output = `signtool.exe sign /n "Company Name, Inc" /t http://timestamp.digicert.com "#{file_path}" 2>&1`
+	  else
+	    # "TODO: Unzip the catalog file and properly sign it then zip it back up."
+	    # Since it is a driver, we need to sign the CAT file here, or embed/sign the SYSINF individually.
+	    sign_tool_output = `signtool.exe sign /ac "./Certificates/DigiCert High Assurance EV Root CA.crt" /n "Company Name, Inc" /t http://timestamp.digicert.com "#{file_path}" 2>&1`
+	  end
+	  puts sign_tool_output
+	  sign_tool_output.gsub!("\n","<br />")
+	  was_signed = 'Failed to sign the file.  See the output below.'
+	  if sign_tool_output.include? "Successfully signed"
+		was_signed = 'Successfully Signed.'
+	  end
+	  was_driver = ''
+	  was_driver = 'It is a driver!' unless is_driver.nil?
 	
     response.status = 200
     response['Content-Type'] = 'text/html'
@@ -55,7 +82,9 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 <head>
 <script type=\"text/javascript\">
 <!--
-window.location='#{filedata.filename}'
+# Make sure Apache, etc is proxying this only to the internal developer network.
+my_url = '[Your company url, proxy which also blocks external requests.]'
+window.location = my_url + '/files/#{filedata.filename}'
 //-->
 </script>
 </head>
@@ -71,7 +100,7 @@ if __FILE__ == $0
 	trap 'INT' do server.shutdown end
 	
 	server.mount '/simple', Simple
-	server.mount '/sign_windows_application.rb', SignWinApp
+	server.mount '/sign_windows_application', SignWinApp
 
 	server.start
 end
