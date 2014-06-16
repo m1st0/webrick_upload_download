@@ -84,7 +84,7 @@ class SignWinApp < WEBrick::HTTPServlet::AbstractServlet
 <!--
 # Make sure Apache, etc is proxying this only to the internal developer network.
 my_url = '[Your company url, proxy which also blocks external requests.]'
-window.location = my_url + '/files/#{filedata.filename}'
+window.location = "#{my_url + '/files/' + filedata.filename}"
 //-->
 </script>
 </head>
